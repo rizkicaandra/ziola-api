@@ -1,6 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ResponseErrorDto } from '../dtos';
-import { ResponseErrorDetail, ResponseError, ResponseSuccess } from '../interfaces';
+import {
+  ResponseErrorDetail,
+  ResponseError,
+  ResponseSuccess,
+} from '../interfaces';
 import { AppErrorCode, AppErrorMessage, AppErrorCodeCustome } from '../enums';
 
 @Injectable()
@@ -43,7 +47,7 @@ export class ResponseGeneratorService {
   error(responseErrorDto: ResponseErrorDto): ResponseError {
     const { code, errors } = responseErrorDto;
     const errorsResult: ResponseErrorDetail[] = [];
-    let errorResult: ResponseErrorDetail | undefined
+    let errorResult: ResponseErrorDetail | undefined;
 
     errors.forEach((error, index) => {
       const errorMessage: string = AppErrorMessage[errors[index]];
