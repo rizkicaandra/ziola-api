@@ -22,3 +22,38 @@ model UserStatus {
 
     @@map("user_status")
 }
+
+model Application {
+    code      String   @id @map("code") @db.Char(3)
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    nameId    String   @unique @map("name_id") @db.VarChar(150)
+    nameEn    String   @unique @map("name_en") @db.VarChar(150)
+
+    @@map("application")
+}
+
+model UserModule {
+    code           String          @id @db.VarChar(5)
+    createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt      DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    nameId         String          @map("name_id") @db.VarChar()
+    nameEn         String          @map("name_en") @db.VarChar()
+    description    String?         @db.Text()
+    userSubmodules UserSubmodule[]
+
+    @@map("user_module")
+}
+
+model UserSubmodule {
+    code           String     @id @db.VarChar(5)
+    createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    userModule     UserModule @relation(fields: [userModuleCode], references: [code])
+    userModuleCode String     @map("user_module_code") @db.VarChar(5)
+    nameId         String     @map("name_id") @db.VarChar()
+    nameEn         String     @map("name_en") @db.VarChar()
+    description    String?    @db.Text()
+
+    @@map("user_submodule")
+}

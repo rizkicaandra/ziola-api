@@ -13,14 +13,20 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
     const httpCtx = host.switchToHttp();
     const httpResponse = httpCtx.getResponse();
-    const httpStatus = this.exceptionUtils.transformHttpStatus(exception);
+    const httpRequest = httpCtx.getRequest();
+    let httpStatus = exception?.response?.statusCode;
     const messageError = exception?.response?.message ?? exception;
 
     const nameError = this.exceptionUtils.classifyError(exception);
-    const bodyResponseError = this.exceptionUtils[nameError](
-      httpStatus,
-      messageError,
-    );
+    const bodyResponseError = this.exceptionUtils[nameError]({
+      statusCode: httpStatus,
+      message: messageError,
+    });
+
+    httpStatus = bodyResponseError.statusCode;
+    if (bodyResponseError.statusCode) delete bodyResponseError.statusCode;
+    bodyResponseError.requestId =
+      httpRequest.headers?.['request-id'] ?? undefined;
 
     httpAdapter.reply(httpResponse, bodyResponseError, httpStatus);
   }

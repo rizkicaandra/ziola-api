@@ -1,11 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { ResponseErrorDto } from '../dtos';
-import {
-  ResponseErrorDetail,
-  ResponseError,
-  ResponseSuccess,
-} from '../interfaces';
-import { AppErrorCode, AppErrorMessage, AppErrorCodeCustome } from '../enums';
+import { ResponseError, ResponseSuccess } from '../interfaces';
+import { AppErrorCode, AppErrorMessage } from '../enums';
 
 @Injectable()
 export class ResponseGeneratorService {
@@ -15,11 +10,9 @@ export class ResponseGeneratorService {
    * @returns @interface ResponseSuccess
    */
   success<T>(data: T): ResponseSuccess<T> {
-    const code = HttpStatus.OK;
-
     return {
-      code,
-      status: HttpStatus[code],
+      code: '000',
+      message: 'Success',
       data,
     };
   }
@@ -30,42 +23,10 @@ export class ResponseGeneratorService {
    * @returns @interface ResponseSuccess
    */
   created<T>(data: T): ResponseSuccess<T> {
-    const code = HttpStatus.CREATED;
-
     return {
-      code,
-      status: HttpStatus[code],
+      code: '100',
+      message: 'Created',
       data,
-    };
-  }
-
-  /**
-   * generator for build response error object
-   * @param responseErrorDto
-   * @returns @interface ResponseError
-   */
-  error(responseErrorDto: ResponseErrorDto): ResponseError {
-    const { code, errors } = responseErrorDto;
-    const errorsResult: ResponseErrorDetail[] = [];
-    let errorResult: ResponseErrorDetail | undefined;
-
-    errors.forEach((error, index) => {
-      const errorMessage: string = AppErrorMessage[errors[index]];
-      const errorDetail: ResponseErrorDetail = {
-        code: errorMessage ? error : AppErrorCodeCustome.CUSTOME,
-        message: errorMessage || error,
-      };
-
-      errorsResult.push(errorDetail);
-    });
-
-    errorResult = errorsResult.length === 1 ? errorsResult[0] : undefined;
-
-    return {
-      code,
-      status: HttpStatus[code],
-      error: errorResult,
-      errors: errorsResult.length > 1 ? errorsResult : undefined,
     };
   }
 
@@ -74,10 +35,11 @@ export class ResponseGeneratorService {
    * @returns @interface ResponseError
    */
   internalServerError(): ResponseError {
-    return this.error({
-      code: HttpStatus.INTERNAL_SERVER_ERROR,
-      errors: [AppErrorCode.INTERNAL_SERVER_ERROR],
-    });
+    return {
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      code: AppErrorCode.INTERNAL_SERVER_ERROR,
+      message: AppErrorMessage[AppErrorCode.INTERNAL_SERVER_ERROR],
+    };
   }
 
   /**
@@ -85,61 +47,54 @@ export class ResponseGeneratorService {
    * @returns @interface ResponseError
    */
   prisma(): ResponseError {
-    return this.error({
-      code: HttpStatus.BAD_REQUEST,
-      errors: [AppErrorCode.PRISMA_ERROR],
-    });
+    return {
+      statusCode: HttpStatus.BAD_REQUEST,
+      code: AppErrorCode.PRISMA_ERROR,
+      message: AppErrorMessage[AppErrorCode.PRISMA_ERROR],
+    };
   }
 
   /**
    * response error builder data not found.
    * @returns @interface ResponseError
    */
-  notFound(message: string): ResponseError {
-    const errors = message || AppErrorCode.NOT_FOUND;
-
-    return this.error({
-      code: HttpStatus.NOT_FOUND,
-      errors: [errors],
-    });
+  notFound(code: AppErrorCode): ResponseError {
+    return {
+      statusCode: HttpStatus.NOT_FOUND,
+      code,
+      message: AppErrorMessage[code],
+    };
   }
 
-  badRequest(message: string): ResponseError {
-    const errors = message || AppErrorCode.BAD_REQUEST;
-
-    return this.error({
-      code: HttpStatus.BAD_REQUEST,
-      errors: [errors],
-    });
+  badRequest(code: AppErrorCode): ResponseError {
+    return {
+      statusCode: HttpStatus.BAD_REQUEST,
+      code,
+      message: AppErrorMessage[code],
+    };
   }
 
-  unauthorized(message: string): ResponseError {
-    const errors = message || AppErrorCode.UNAUTHORIZED;
-
-    return this.error({
-      code: HttpStatus.UNAUTHORIZED,
-      errors: [errors],
-    });
+  unauthorized(code: AppErrorCode): ResponseError {
+    return {
+      statusCode: HttpStatus.UNAUTHORIZED,
+      code,
+      message: AppErrorMessage[code],
+    };
   }
 
-  forbidden(message: string): ResponseError {
-    const errors = message || AppErrorCode.FORBIDDEN;
-
-    return this.error({
-      code: HttpStatus.FORBIDDEN,
-      errors: [errors],
-    });
+  forbidden(code: AppErrorCode): ResponseError {
+    return {
+      statusCode: HttpStatus.FORBIDDEN,
+      code,
+      message: AppErrorMessage[code],
+    };
   }
 
-  validationPipe(errors: string[], httpStatus: HttpStatus) {
-    let errorsData: string[] = [];
-
-    if (Array.isArray(errors)) errorsData = [...errors];
-    else errorsData = [errors];
-
-    return this.error({
-      code: httpStatus,
-      errors: errorsData,
-    });
+  validationPipe(error: string[]): ResponseError {
+    return {
+      statusCode: HttpStatus.BAD_REQUEST,
+      code: AppErrorCode.VALIDATION_ERROR,
+      message: error?.[0] ?? AppErrorMessage[AppErrorCode.VALIDATION_ERROR],
+    };
   }
 }
