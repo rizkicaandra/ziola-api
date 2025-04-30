@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ResponseError } from '../interfaces';
 import { AppErrorCode } from '../enums';
 import { ResponseGeneratorService } from '../responses';
+import { CustomeExceptionDto } from '../dtos';
 
 @Injectable()
 export class ExceptionUtils {
@@ -9,47 +10,31 @@ export class ExceptionUtils {
 
   classifyError(exception: any): string {
     // service error
-    if (exception?.code && exception?.status) return 'appFormat';
+    if (exception?.code && exception?.statusCode) return 'appFormat';
 
-    // validation error
-    if (exception?.name === 'BadRequestException') return 'badRequest';
+    if (
+      typeof exception?.response === 'object' &&
+      Array.isArray((exception?.response as { message: any }).message)
+    )
+      return 'validation';
 
     // default error
     return 'default';
   }
 
-  appFormat(_, message: any): ResponseError {
-    return message;
+  appFormat(errorDto: CustomeExceptionDto): ResponseError {
+    return errorDto.message;
   }
 
-  badRequest(httpStatus: HttpStatus | number, message: string[]): ResponseError {
-    return this.response.validationPipe(message, httpStatus);
+  validation(errorDto: CustomeExceptionDto): ResponseError {
+    return this.response.validationPipe(errorDto.message);
   }
 
-  default(httpStatus: HttpStatus, message: string): ResponseError {
-    return this.response.error({
-      code: httpStatus,
-      errors: [message || AppErrorCode.INTERNAL_SERVER_ERROR],
-    });
-  }
-
-  isHttpStatus(value: any): boolean {
-    return Object.values(HttpStatus).includes(value);
-  }
-
-  transformHttpStatus(exception: any): number {
-    let result;
-
-    if (exception instanceof HttpException) {
-      result = exception.getStatus();
-    } else if (this.isHttpStatus(exception?.code)) {
-      result = exception.code;
-    } else if (this.isHttpStatus(exception?.status)) {
-      result = exception.status;
-    } else {
-      result = HttpStatus.INTERNAL_SERVER_ERROR;
-    }
-
-    return result;
+  default(errorDto: CustomeExceptionDto): ResponseError {
+    return {
+      code: AppErrorCode.INTERNAL_SERVER_ERROR,
+      message: errorDto.message,
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+    };
   }
 }

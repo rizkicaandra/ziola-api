@@ -1,1 +1,2 @@
-export * from './responses';
+export * from './common';
+export * from './response';
