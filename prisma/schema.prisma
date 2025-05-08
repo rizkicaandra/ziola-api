@@ -24,36 +24,67 @@ model UserStatus {
 }
 
 model Application {
-    code      String   @id @map("code") @db.Char(3)
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-    nameId    String   @unique @map("name_id") @db.VarChar(150)
-    nameEn    String   @unique @map("name_en") @db.VarChar(150)
+    code      String     @id @map("code") @db.Char(3)
+    createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    nameId    String     @unique @map("name_id") @db.VarChar(150)
+    nameEn    String     @unique @map("name_en") @db.VarChar(150)
+    userRoles UserRole[]
 
     @@map("application")
 }
 
 model UserModule {
-    code           String          @id @db.VarChar(5)
-    createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt      DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-    nameId         String          @map("name_id") @db.VarChar()
-    nameEn         String          @map("name_en") @db.VarChar()
-    description    String?         @db.Text()
-    userSubmodules UserSubmodule[]
+    code            String           @id @db.VarChar(5)
+    createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    nameId          String           @map("name_id") @db.VarChar()
+    nameEn          String           @map("name_en") @db.VarChar()
+    description     String?          @db.Text()
+    userSubmodules  UserSubmodule[]
+    userPermissions UserPermission[]
 
     @@map("user_module")
 }
 
 model UserSubmodule {
-    code           String     @id @db.VarChar(5)
-    createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-    userModule     UserModule @relation(fields: [userModuleCode], references: [code])
-    userModuleCode String     @map("user_module_code") @db.VarChar(5)
-    nameId         String     @map("name_id") @db.VarChar()
-    nameEn         String     @map("name_en") @db.VarChar()
-    description    String?    @db.Text()
+    code            String           @id @db.VarChar(5)
+    createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    userModule      UserModule       @relation(fields: [userModuleCode], references: [code])
+    userModuleCode  String           @map("user_module_code") @db.VarChar(5)
+    nameId          String           @map("name_id") @db.VarChar()
+    nameEn          String           @map("name_en") @db.VarChar()
+    description     String?          @db.Text()
+    userPermissions UserPermission[]
 
     @@map("user_submodule")
+}
+
+model UserRole {
+    id              Int              @id @default(autoincrement())
+    code            String           @db.VarChar(5)
+    createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt       DateTime         @default(now()) @map("updated_at") @db.Timestamptz()
+    name            String           @db.VarChar()
+    application     Application?     @relation(fields: [applicationCode], references: [code])
+    applicationCode String?          @map("application_code") @db.Char(3)
+    userPermissions UserPermission[]
+
+    @@map("user_role")
+}
+
+model UserPermission {
+    id                Int            @id() @default(autoincrement())
+    createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt         DateTime       @default(now()) @map("updated_at") @db.Timestamptz()
+    userRole          UserRole?      @relation(fields: [userRoleId], references: [id])
+    userRoleId        Int?           @map("user_role_id") @db.Integer()
+    userModule        UserModule?    @relation(fields: [userModuleCode], references: [code])
+    userModuleCode    String?        @map("user_module_code") @db.VarChar(5)
+    userSubmodule     UserSubmodule? @relation(fields: [userSubmoduleCode], references: [code])
+    userSubmoduleCode String?        @map("user_submodule_code") @db.VarChar(5)
+    action            Json?          @db.Json()
+
+    @@map("user_permission")
 }

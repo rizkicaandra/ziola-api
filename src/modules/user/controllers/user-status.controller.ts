@@ -19,11 +19,11 @@ export class UserStatusController {
 
   @Get(':code')
   async findOneByCode(
-    @Param() { code }: FindUserStatusByCodeParam,
+    @Param() { userStatusCode }: FindUserStatusByCodeParam,
     @Query() { isNotFound }: FindUserStatusQuery,
   ) {
     const status = await this.userStatusService.findOneByCode({
-      code,
+      userStatusCode,
       isNotFound,
     });
 

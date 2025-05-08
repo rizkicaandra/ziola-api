@@ -19,7 +19,7 @@ export class UserStatusService {
     const userStatus = await this.prisma.userStatus.findFirst({
       where: {
         code: {
-          contains: statusDto.code,
+          contains: statusDto.userStatusCode,
           mode: 'insensitive',
         },
       },

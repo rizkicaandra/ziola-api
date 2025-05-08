@@ -3,6 +3,7 @@ import { ResponseError } from '../interfaces';
 import { AppErrorCode } from '../enums';
 import { ResponseGeneratorService } from '../responses';
 import { CustomeExceptionDto } from '../dtos';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ExceptionUtils {
@@ -18,6 +19,12 @@ export class ExceptionUtils {
     )
       return 'validation';
 
+    if (
+      exception instanceof Prisma.PrismaClientKnownRequestError ||
+      exception instanceof Prisma.PrismaClientValidationError
+    )
+      return 'prisma';
+
     // default error
     return 'default';
   }
@@ -28,6 +35,10 @@ export class ExceptionUtils {
 
   validation(errorDto: CustomeExceptionDto): ResponseError {
     return this.response.validationPipe(errorDto.message);
+  }
+
+  prisma(errorDto: CustomeExceptionDto): ResponseError {
+    return this.response.prisma();
   }
 
   default(errorDto: CustomeExceptionDto): ResponseError {
