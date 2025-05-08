@@ -7,8 +7,13 @@ export const AppErrorMessage: { [key in AppErrorCode]: string } = {
   [AppErrorCode.PRISMA_ERROR]:
     'We apologize, but the data you entered appears to be invalid. Please double-check the input and try again',
   [AppErrorCode.HEADERS_INVALID]: 'Headers missing or invalid',
+  [AppErrorCode.BAD_REQUEST]: 'Bad Request',
+  [AppErrorCode.UNAUTHORIZED]: 'Unauthorized',
+  [AppErrorCode.FORBIDDEN]: 'Forbidden',
+  [AppErrorCode.NOT_FOUND]: 'The requested item could not be found',
   [AppErrorCode.VALIDATION_ERROR]: 'Validation error',
-  [AppErrorCode.USER_STATUS_NOT_FOUND]: 'user status could not be found',
-  [AppErrorCode.APPLICATION_NOT_FOUND]: 'application item could not be found',
-  [AppErrorCode.USER_MODULE_NOT_FOUND]: 'user module item could not be found',
+  [AppErrorCode.USER_STATUS_NOT_FOUND]: 'User status could not be found',
+  [AppErrorCode.APPLICATION_NOT_FOUND]: 'Application item could not be found',
+  [AppErrorCode.USER_MODULE_NOT_FOUND]: 'User module item could not be found',
+  [AppErrorCode.USER_ROLE_NOT_FOUND]: 'User role item could not be found',
 };

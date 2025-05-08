@@ -20,10 +20,10 @@ export class ApplicationController {
   @Get(':code')
   async findOneByCode(
     @Query() { isNotFound }: FindApplicationQuery,
-    @Param() { code }: FindApplicationByCodeParam,
+    @Param() { applicationCode }: FindApplicationByCodeParam,
   ) {
     const application = await this.applicationService.findOneByCode({
-      code,
+      applicationCode,
       isNotFound,
     });
 

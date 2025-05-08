@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma';
 import { AppErrorCode } from 'src/core/enums';
 import { ResponseGeneratorService } from 'src/core/responses';
+import { FindUserModuleByCodeDto } from '../dto';
 
 @Injectable()
 export class UserModuleService {
@@ -29,7 +30,7 @@ export class UserModuleService {
     });
   }
 
-  async findOneByCode({ code, isNotFound }) {
+  async findOneByCode({ userModuleCode, isNotFound }: FindUserModuleByCodeDto) {
     const userModule = await this.prisma.userModule.findFirst({
       select: {
         code: true,
@@ -46,7 +47,7 @@ export class UserModuleService {
         },
       },
       where: {
-        code,
+        code: userModuleCode,
       },
     });
 

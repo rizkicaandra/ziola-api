@@ -19,11 +19,11 @@ export class UserModuleController {
 
   @Get(':code')
   async findOneByCode(
-    @Param() { code }: FindUserModuleByCodeParam,
+    @Param() { userModuleCode }: FindUserModuleByCodeParam,
     @Query() { isNotFound }: FindUserStatusQuery,
   ) {
     const userModule = await this.userModuleService.findOneByCode({
-      code,
+      userModuleCode,
       isNotFound,
     });
 

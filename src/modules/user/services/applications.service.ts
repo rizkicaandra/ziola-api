@@ -19,7 +19,7 @@ export class ApplicationService {
     const application = await this.prisma.application.findFirst({
       where: {
         code: {
-          contains: applicationDto.code,
+          contains: applicationDto.applicationCode,
           mode: 'insensitive',
         },
       },

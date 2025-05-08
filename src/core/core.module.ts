@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common';
 import { ResponseGeneratorService } from './responses';
-import { ExceptionUtils } from './utils';
+import { ExceptionUtils, PaginationUtil } from './utils';
 
 @Global()
 @Module({
-  providers: [ResponseGeneratorService, ExceptionUtils],
-  exports: [ResponseGeneratorService, ExceptionUtils],
+  providers: [ResponseGeneratorService, ExceptionUtils, PaginationUtil],
+  exports: [ResponseGeneratorService, ExceptionUtils, PaginationUtil],
 })
 export class CoreModule {}

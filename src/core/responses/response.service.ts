@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ResponseError, ResponseSuccess } from '../interfaces';
-import { AppErrorCode, AppErrorMessage } from '../enums';
+import { AppErrorCode, AppErrorCodeCustome, AppErrorMessage } from '../enums';
 
 @Injectable()
 export class ResponseGeneratorService {
@@ -27,6 +27,19 @@ export class ResponseGeneratorService {
       code: '100',
       message: 'Created',
       data,
+    };
+  }
+
+  error(statusCode: HttpStatus, code: string): ResponseError {
+    const codeError = AppErrorMessage?.[code]
+      ? code
+      : AppErrorCodeCustome.CUSTOME;
+    const messageError = AppErrorMessage?.[codeError] ?? code;
+
+    return {
+      statusCode: statusCode,
+      code: codeError,
+      message: messageError,
     };
   }
 
@@ -58,36 +71,20 @@ export class ResponseGeneratorService {
    * response error builder data not found.
    * @returns @interface ResponseError
    */
-  notFound(code: AppErrorCode): ResponseError {
-    return {
-      statusCode: HttpStatus.NOT_FOUND,
-      code,
-      message: AppErrorMessage[code],
-    };
+  notFound(message: string = AppErrorCode.NOT_FOUND): ResponseError {
+    return this.error(HttpStatus.NOT_FOUND, message);
   }
 
-  badRequest(code: AppErrorCode): ResponseError {
-    return {
-      statusCode: HttpStatus.BAD_REQUEST,
-      code,
-      message: AppErrorMessage[code],
-    };
+  badRequest(message: string = AppErrorCode.BAD_REQUEST): ResponseError {
+    return this.error(HttpStatus.BAD_REQUEST, message);
   }
 
-  unauthorized(code: AppErrorCode): ResponseError {
-    return {
-      statusCode: HttpStatus.UNAUTHORIZED,
-      code,
-      message: AppErrorMessage[code],
-    };
+  unauthorized(message: string = AppErrorCode.UNAUTHORIZED): ResponseError {
+    return this.error(HttpStatus.UNAUTHORIZED, message);
   }
 
-  forbidden(code: AppErrorCode): ResponseError {
-    return {
-      statusCode: HttpStatus.FORBIDDEN,
-      code,
-      message: AppErrorMessage[code],
-    };
+  forbidden(message: string = AppErrorCode.FORBIDDEN): ResponseError {
+    return this.error(HttpStatus.FORBIDDEN, message);
   }
 
   validationPipe(error: string[]): ResponseError {
