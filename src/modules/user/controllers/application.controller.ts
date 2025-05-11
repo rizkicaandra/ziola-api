@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ResponseGeneratorService } from 'src/core/responses';
-import { ApplicationService } from '../services/applications.service';
+import { ApplicationService } from '../services';
 import { FindApplicationByCodeParam, FindApplicationQuery } from '../dto';
 
 @Controller('applications')
@@ -17,7 +17,7 @@ export class ApplicationController {
     return this.response.success(applications);
   }
 
-  @Get(':code')
+  @Get(':applicationCode')
   async findOneByCode(
     @Query() { isNotFound }: FindApplicationQuery,
     @Param() { applicationCode }: FindApplicationByCodeParam,

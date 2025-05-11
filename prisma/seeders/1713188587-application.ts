@@ -4,14 +4,14 @@ const prisma = new PrismaClient();
 async function main() {
   const data: Prisma.ApplicationCreateManyInput[] = [
     {
-      code: 'RVP',
-      nameId: 'ROCKET VOUCHER PORTAL',
-      nameEn: 'ROCKET VOUCHER PORTAL',
+      code: 'ZAP',
+      nameId: 'ZIOLA PORTAL',
+      nameEn: 'ZIOLA PORTAL',
     },
     {
-      code: 'RVA',
-      nameId: 'ROCKET VOUCHER ADMIN SUITE',
-      nameEn: 'ROCKET VOUCHER ADMIN SUITE',
+      code: 'ZAS',
+      nameId: 'ZIOLA ADMIN SUITE',
+      nameEn: 'ZIOLA ADMIN SUITE',
     },
   ];
 

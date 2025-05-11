@@ -17,7 +17,7 @@ export class UserStatusController {
     return this.response.success(statues);
   }
 
-  @Get(':code')
+  @Get(':userStatusCode')
   async findOneByCode(
     @Param() { userStatusCode }: FindUserStatusByCodeParam,
     @Query() { isNotFound }: FindUserStatusQuery,

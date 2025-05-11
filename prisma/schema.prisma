@@ -14,22 +14,24 @@ datasource db {
 }
 
 model UserStatus {
-    code      String   @id @db.Char(3)
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-    nameId    String   @unique @map("name_id") @db.VarChar(150)
-    nameEn    String   @unique @map("name_en") @db.VarChar(150)
+    code         String        @id @db.Char(3)
+    createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    nameId       String        @unique @map("name_id") @db.VarChar(150)
+    nameEn       String        @unique @map("name_en") @db.VarChar(150)
+    userAccounts UserAccount[]
 
     @@map("user_status")
 }
 
 model Application {
-    code      String     @id @map("code") @db.Char(3)
-    createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-    nameId    String     @unique @map("name_id") @db.VarChar(150)
-    nameEn    String     @unique @map("name_en") @db.VarChar(150)
-    userRoles UserRole[]
+    code         String        @id @db.Char(3)
+    createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt    DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    nameId       String        @unique @map("name_id") @db.VarChar(150)
+    nameEn       String        @unique @map("name_en") @db.VarChar(150)
+    userRoles    UserRole[]
+    userAccounts UserAccount[]
 
     @@map("application")
 }
@@ -70,6 +72,7 @@ model UserRole {
     application     Application?     @relation(fields: [applicationCode], references: [code])
     applicationCode String?          @map("application_code") @db.Char(3)
     userPermissions UserPermission[]
+    userAccounts    UserAccount[]
 
     @@map("user_role")
 }
@@ -87,4 +90,24 @@ model UserPermission {
     action            Json?          @db.Json()
 
     @@map("user_permission")
+}
+
+model UserAccount {
+    id              String       @id() @default(cuid()) @db.VarChar()
+    createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt       DateTime     @default(now()) @map("updated_at") @db.Timestamptz()
+    createdBy       String?      @map("created_by") @db.VarChar()
+    updatedBy       String?      @map("updated_by") @db.VarChar()
+    name            String       @db.VarChar()
+    phone           String       @unique @db.VarChar()
+    email           String       @unique @db.VarChar()
+    password        String       @db.VarChar()
+    application     Application? @relation(fields: [applicationCode], references: [code])
+    applicationCode String?      @map("application_code") @db.Char(3)
+    userRole        UserRole?    @relation(fields: [userRoleId], references: [id])
+    userRoleId      Int?         @map("role_id") @db.Integer()
+    userStatus      UserStatus?  @relation(fields: [status], references: [code])
+    status          String?      @db.Char(3)
+
+    @@map("user_account")
 }

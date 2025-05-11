@@ -17,7 +17,7 @@ export class UserModuleController {
     return this.response.success(userModules);
   }
 
-  @Get(':code')
+  @Get(':userModuleCode')
   async findOneByCode(
     @Param() { userModuleCode }: FindUserModuleByCodeParam,
     @Query() { isNotFound }: FindUserStatusQuery,
