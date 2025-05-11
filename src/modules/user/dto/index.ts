@@ -6,3 +6,5 @@ export * from './user-status.dto';
 export * from './application.dto';
 export * from './user-module.dto';
 export * from './user-role.dto';
+export * from './user-account-base.dto';
+export * from './user-account.dto';

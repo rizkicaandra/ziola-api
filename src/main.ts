@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { validationPipeOptions } from './core/configs';
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
@@ -12,6 +11,7 @@ async function bootstrap() {
   const logger = new Logger('Main');
 
   app.useGlobalPipes(new ValidationPipe(validationPipeOptions));
+  app.setGlobalPrefix('v1');
 
   await app.listen(portHttp ?? 3000);
   logger.log(`Api service is running on port:${portHttp}`);

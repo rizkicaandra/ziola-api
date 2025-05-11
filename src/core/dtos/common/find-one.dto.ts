@@ -15,12 +15,12 @@ export class FindOneDto {
     return new CommonUtils().transformBoolean(value);
   })
   @IsBoolean()
-  isExist?: boolean;
+  isExist?: boolean = true;
 
   @ValidateIf((value) => value.isShowPassword)
   @Transform(({ value }) => {
     return new CommonUtils().transformBoolean(value);
   })
   @IsBoolean()
-  isShowPassword?: boolean;
+  isShowPassword?: boolean = false;
 }

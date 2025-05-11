@@ -16,4 +16,9 @@ export const AppErrorMessage: { [key in AppErrorCode]: string } = {
   [AppErrorCode.APPLICATION_NOT_FOUND]: 'Application item could not be found',
   [AppErrorCode.USER_MODULE_NOT_FOUND]: 'User module item could not be found',
   [AppErrorCode.USER_ROLE_NOT_FOUND]: 'User role item could not be found',
+  [AppErrorCode.USER_ACCOUNT_NOT_FOUND]: 'User account could not be found',
+  [AppErrorCode.USER_ACCOUNT_PASSWORD_MUST_BE_DIFFERENT_WITH_NEW_ONE]:
+    'New password must be different from the current password',
+  [AppErrorCode.USER_ACCOUNT_CURRENT_PASSWORD_NOT_MATCH]:
+    'Current password does not match',
 };
