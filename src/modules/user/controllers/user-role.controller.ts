@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   CreateUserRoleDto,
   FindUserRoleByIdParam,
@@ -8,8 +17,12 @@ import {
 } from '../dto';
 import { UserRoleService } from '../services';
 import { ResponseGeneratorService } from 'src/core/responses';
+import { SuiteGuard, SuitePermissionsGuard } from 'src/core/guards';
+import { RequireSuitePermissions } from 'src/core/decorators';
+import { UserSubmoduleCode } from 'src/core/enums';
 
 @Controller('user-roles')
+@UseGuards(SuiteGuard, SuitePermissionsGuard)
 export class UserRoleController {
   constructor(
     private readonly userRoleService: UserRoleService,
@@ -17,6 +30,10 @@ export class UserRoleController {
   ) {}
 
   @Post()
+  @RequireSuitePermissions({
+    userSubmoduleCode: UserSubmoduleCode.ROLE,
+    action: { create: true },
+  })
   async create(@Body() createDto: CreateUserRoleDto) {
     const userRole = await this.userRoleService.create(createDto);
 
@@ -44,6 +61,10 @@ export class UserRoleController {
   }
 
   @Put(':userRoleId')
+  @RequireSuitePermissions({
+    userSubmoduleCode: UserSubmoduleCode.ROLE,
+    action: { update: true },
+  })
   async updateById(
     @Param() paramDto: FindUserRoleByIdParam,
     @Body() updateDto: UpdateUserRoleBodyDto,

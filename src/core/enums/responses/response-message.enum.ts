@@ -12,6 +12,8 @@ export const AppErrorMessage: { [key in AppErrorCode]: string } = {
   [AppErrorCode.FORBIDDEN]: 'Forbidden',
   [AppErrorCode.NOT_FOUND]: 'The requested item could not be found',
   [AppErrorCode.VALIDATION_ERROR]: 'Validation error',
+  [AppErrorCode.CONFIGURATION_ERROR]:
+    'Unable to retrieve required configuration data',
   [AppErrorCode.USER_STATUS_NOT_FOUND]: 'User status could not be found',
   [AppErrorCode.APPLICATION_NOT_FOUND]: 'Application item could not be found',
   [AppErrorCode.USER_MODULE_NOT_FOUND]: 'User module item could not be found',
@@ -21,4 +23,8 @@ export const AppErrorMessage: { [key in AppErrorCode]: string } = {
     'New password must be different from the current password',
   [AppErrorCode.USER_ACCOUNT_CURRENT_PASSWORD_NOT_MATCH]:
     'Current password does not match',
+  [AppErrorCode.USER_AUTH_ACCESS_DENIED]: 'Access denied',
+  [AppErrorCode.USER_AUTH_PERMISSION_DENIED]: 'Permission denied',
+  [AppErrorCode.USER_AUTH_SIGNIN_DENIED]:
+    'Sign-in denied. Please enter valid login information.',
 };

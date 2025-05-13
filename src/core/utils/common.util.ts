@@ -17,7 +17,11 @@ export class CommonUtils {
     return result;
   }
 
-  isEpoch(value: number): boolean {
+  isEpoch(value?: number): boolean {
+    if (!value) {
+      return false;
+    }
+
     if (!Number.isInteger(value) || value <= 0) {
       return false;
     }

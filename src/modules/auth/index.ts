@@ -1,4 +1,3 @@
-export * from './dto';
-export * from './user.module';
+export * from './auth.module';
 export * from './controllers';
 export * from './services';

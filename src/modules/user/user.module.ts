@@ -14,12 +14,12 @@ import {
   UserStatusService,
 } from './services';
 import { PrismaModule } from 'prisma';
-import { CoreModule } from 'src/core';
 import { MailerModule } from '../mailer/mailer.module';
+import { AuthModule } from '../auth';
 
 // create module user
 @Module({
-  imports: [PrismaModule, CoreModule, MailerModule],
+  imports: [PrismaModule, MailerModule, AuthModule],
   controllers: [
     UserStatusController,
     ApplicationController,
@@ -28,12 +28,12 @@ import { MailerModule } from '../mailer/mailer.module';
     UserAccountController,
   ],
   providers: [
-    UserStatusService,
+    UserAccountService,
     ApplicationService,
+    UserStatusService,
     UserModuleService,
     UserRoleService,
-    UserAccountService,
   ],
-  exports: [],
+  exports: [UserAccountService],
 })
 export class UserModule {}

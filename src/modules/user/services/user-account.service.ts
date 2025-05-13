@@ -381,6 +381,7 @@ export class UserAccountService {
       },
       data: {
         status: updateStatusDto.userStatusCode,
+        updatedBy: updateStatusDto.updatedBy,
       },
     });
 

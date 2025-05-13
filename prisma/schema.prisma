@@ -105,7 +105,7 @@ model UserAccount {
     application     Application? @relation(fields: [applicationCode], references: [code])
     applicationCode String?      @map("application_code") @db.Char(3)
     userRole        UserRole?    @relation(fields: [userRoleId], references: [id])
-    userRoleId      Int?         @map("role_id") @db.Integer()
+    userRoleId      Int?         @map("user_role_id") @db.Integer()
     userStatus      UserStatus?  @relation(fields: [status], references: [code])
     status          String?      @db.Char(3)
 

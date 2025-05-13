@@ -1,9 +1,11 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { UserModuleService } from '../services';
 import { ResponseGeneratorService } from 'src/core/responses';
 import { FindUserModuleByCodeParam, FindUserStatusQuery } from '../dto';
+import { SuiteGuard } from 'src/core/guards';
 
 @Controller('user-modules')
+@UseGuards(SuiteGuard)
 export class UserModuleController {
   constructor(
     private readonly userModuleService: UserModuleService,

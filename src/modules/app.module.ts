@@ -5,6 +5,7 @@ import { CoreModule } from 'src/core';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from 'src/core/filters';
 import { MailerModule } from './mailer';
+import { AuthModule } from './auth';
 
 @Module({
   imports: [
@@ -13,9 +14,10 @@ import { MailerModule } from './mailer';
       cache: true,
       envFilePath: '.env',
     }),
-    UserModule,
     CoreModule,
     MailerModule,
+    UserModule,
+    AuthModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],
 })
