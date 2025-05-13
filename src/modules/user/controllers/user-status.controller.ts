@@ -1,9 +1,11 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { UserStatusService } from '../services';
 import { ResponseGeneratorService } from 'src/core/responses';
 import { FindUserStatusByCodeParam, FindUserStatusQuery } from '../dto';
+import { SuiteGuard } from 'src/core/guards';
 
 @Controller('user-statuses')
+@UseGuards(SuiteGuard)
 export class UserStatusController {
   constructor(
     private readonly userStatusService: UserStatusService,

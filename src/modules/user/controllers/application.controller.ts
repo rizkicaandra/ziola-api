@@ -1,9 +1,11 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ResponseGeneratorService } from 'src/core/responses';
 import { ApplicationService } from '../services';
 import { FindApplicationByCodeParam, FindApplicationQuery } from '../dto';
+import { SuiteGuard } from 'src/core/guards';
 
 @Controller('applications')
+@UseGuards(SuiteGuard)
 export class ApplicationController {
   constructor(
     private readonly applicationService: ApplicationService,

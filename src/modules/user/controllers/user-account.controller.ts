@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ResponseGeneratorService } from 'src/core/responses';
 import {
@@ -20,8 +21,13 @@ import {
   UpdateUserAccountStatusBodyDto,
 } from '../dto';
 import { UserAccountService } from '../services';
+import { SuiteGuard, SuitePermissionsGuard } from 'src/core/guards';
+import { RequireSuitePermissions, UserProfile } from 'src/core/decorators';
+import { UserSubmoduleCode } from 'src/core/enums';
+import { UserAccount } from '@prisma/client';
 
 @Controller('user-accounts')
+@UseGuards(SuiteGuard, SuitePermissionsGuard)
 export class UserAccountController {
   constructor(
     private readonly response: ResponseGeneratorService,
@@ -29,8 +35,18 @@ export class UserAccountController {
   ) {}
 
   @Post()
-  async create(@Body() createDto: CreateUserAccountDto) {
-    const userAccount = await this.userAccountService.create(createDto);
+  @RequireSuitePermissions({
+    userSubmoduleCode: UserSubmoduleCode.USER,
+    action: { create: true },
+  })
+  async create(
+    @Body() createDto: CreateUserAccountDto,
+    @UserProfile() userProfile: UserAccount,
+  ) {
+    const userAccount = await this.userAccountService.create({
+      ...createDto,
+      createdBy: userProfile.email,
+    });
 
     return this.response.created({
       userAccount,
@@ -58,13 +74,19 @@ export class UserAccountController {
   }
 
   @Put(':userAccountId')
+  @RequireSuitePermissions({
+    userSubmoduleCode: UserSubmoduleCode.USER,
+    action: { update: true },
+  })
   async update(
     @Param() paramDto: FindUserAccountParam,
     @Body() updateDto: UpdateUserAccountBodyDto,
+    @UserProfile() userProfile: UserAccount,
   ) {
     const userAccount = await this.userAccountService.update({
       ...paramDto,
       ...updateDto,
+      updatedBy: userProfile.email,
     });
 
     return this.response.success({
@@ -73,13 +95,19 @@ export class UserAccountController {
   }
 
   @Patch(':userAccountId/status')
+  @RequireSuitePermissions({
+    userSubmoduleCode: UserSubmoduleCode.USER,
+    action: { update: true },
+  })
   async updateStatus(
     @Param() paramDto: FindUserAccountParam,
     @Body() updateDto: UpdateUserAccountStatusBodyDto,
+    @UserProfile() userProfile: UserAccount,
   ) {
     const userAccount = await this.userAccountService.updateStatus({
       ...paramDto,
       ...updateDto,
+      updatedBy: userProfile.email,
     });
 
     return this.response.success({
@@ -88,13 +116,19 @@ export class UserAccountController {
   }
 
   @Patch(':userAccountId/role')
+  @RequireSuitePermissions({
+    userSubmoduleCode: UserSubmoduleCode.USER,
+    action: { update: true },
+  })
   async updateRole(
     @Param() paramDto: FindUserAccountParam,
     @Body() updateDto: UpdateUserAccountRoleBodyDto,
+    @UserProfile() userProfile: UserAccount,
   ) {
     const userAccount = await this.userAccountService.updateRole({
       ...paramDto,
       ...updateDto,
+      updatedBy: userProfile.email,
     });
 
     return this.response.success({
@@ -103,6 +137,10 @@ export class UserAccountController {
   }
 
   @Patch(':userAccountId/password')
+  @RequireSuitePermissions({
+    userSubmoduleCode: UserSubmoduleCode.USER,
+    action: { update: true },
+  })
   async updatePassword(
     @Param() paramDto: FindUserAccountParam,
     @Body() updateDto: UpdateUserAccountPasswordBodyDto,
